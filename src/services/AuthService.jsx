@@ -53,3 +53,15 @@ export const changePassword = async (passwordData, token) => {
         throw new Error(error.response?.data?.message || 'Failed to change password');
     }
 };
+
+
+export const verifyEmail = async (email, code) => {
+    const response = await axios.post(
+        `${API_URL}/verify-email`,
+        {
+            email: email,
+            code: code,
+        }
+    );
+    return response.data;
+};

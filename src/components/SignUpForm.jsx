@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { signup } from '../services/AuthService.jsx';
+import VerificationModal from './VerificationModal';
 
 const SignUpForm = () => {
     const [form, setForm] = useState({
@@ -11,6 +12,8 @@ const SignUpForm = () => {
         phoneNumber: ''
     });
     const [message, setMessage] = useState('');
+    const [showVerificationModal, setShowVerificationModal] = useState(false);
+    const [userData, setUserData] = useState(null);
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -20,98 +23,115 @@ const SignUpForm = () => {
         e.preventDefault();
         try {
             const data = await signup(form);
-            setMessage(data);
+            setUserData(data);
+            setShowVerificationModal(true);
+            setMessage('');
         } catch (err) {
             setMessage('Registration failed: ' + err.message);
         }
     };
 
+    const handleVerificationSuccess = () => {
+        setShowVerificationModal(false);
+        setMessage('Registration successful! You can now log in.');
+    };
+
     return (
-        <form onSubmit={handleSignUp}>
-            <div className="text-center mb-4">
-                <h2><strong>LOGO</strong><span className="text-primary">TYPE</span></h2>
-                <p className="text-muted">Sign Up</p>
-            </div>
+        <>
+            <form onSubmit={handleSignUp}>
+                <div className="text-center mb-4">
+                    <h2><strong>LOGO</strong><span className="text-primary">TYPE</span></h2>
+                    <p className="text-muted">Sign Up</p>
+                </div>
 
-            <div className="mb-3">
-                <input
-                    type="email"
-                    className="form-control"
-                    name="email"
-                    value={form.email}
-                    onChange={handleChange}
-                    placeholder="Email"
-                    required
-                />
-            </div>
+                <div className="mb-3">
+                    <input
+                        type="email"
+                        className="form-control"
+                        name="email"
+                        value={form.email}
+                        onChange={handleChange}
+                        placeholder="Email"
+                        required
+                    />
+                </div>
 
-            <div className="mb-3">
-                <input
-                    type="password"
-                    className="form-control"
-                    name="password"
-                    value={form.password}
-                    onChange={handleChange}
-                    placeholder="Password"
-                    required
-                />
-            </div>
+                <div className="mb-3">
+                    <input
+                        type="password"
+                        className="form-control"
+                        name="password"
+                        value={form.password}
+                        onChange={handleChange}
+                        placeholder="Password"
+                        required
+                    />
+                </div>
 
-            <div className="mb-3">
-                <input
-                    type="password"
-                    className="form-control"
-                    name="confirmPassword"
-                    value={form.confirmPassword}
-                    onChange={handleChange}
-                    placeholder="Confirm Password"
-                    required
-                />
-            </div>
+                <div className="mb-3">
+                    <input
+                        type="password"
+                        className="form-control"
+                        name="confirmPassword"
+                        value={form.confirmPassword}
+                        onChange={handleChange}
+                        placeholder="Confirm Password"
+                        required
+                    />
+                </div>
 
-            <div className="mb-3">
-                <input
-                    type="text"
-                    className="form-control"
-                    name="firstName"
-                    value={form.firstName}
-                    onChange={handleChange}
-                    placeholder="First Name"
-                />
-            </div>
+                <div className="mb-3">
+                    <input
+                        type="text"
+                        className="form-control"
+                        name="firstName"
+                        value={form.firstName}
+                        onChange={handleChange}
+                        placeholder="First Name"
+                    />
+                </div>
 
-            <div className="mb-3">
-                <input
-                    type="text"
-                    className="form-control"
-                    name="lastName"
-                    value={form.lastName}
-                    onChange={handleChange}
-                    placeholder="Last Name"
-                />
-            </div>
+                <div className="mb-3">
+                    <input
+                        type="text"
+                        className="form-control"
+                        name="lastName"
+                        value={form.lastName}
+                        onChange={handleChange}
+                        placeholder="Last Name"
+                    />
+                </div>
 
-            <div className="mb-4">
-                <input
-                    type="tel"
-                    className="form-control"
-                    name="phoneNumber"
-                    value={form.phoneNumber}
-                    onChange={handleChange}
-                    placeholder="Phone Number"
-                />
-            </div>
+                <div className="mb-4">
+                    <input
+                        type="tel"
+                        className="form-control"
+                        name="phoneNumber"
+                        value={form.phoneNumber}
+                        onChange={handleChange}
+                        placeholder="Phone Number"
+                    />
+                </div>
 
-            <div className="d-grid mb-3">
-                <button type="submit" className="btn btn-primary">Sign Up</button>
-            </div>
+                <div className="d-grid mb-3">
+                    <button type="submit" className="btn btn-primary">Sign Up</button>
+                </div>
 
-            {message && <p className={`text-center small ${message.includes('failed') ? 'text-danger' : 'text-success'}`}>{message}</p>}
+                {message && <p className={`text-center small ${message.includes('failed') ? 'text-danger' : 'text-success'}`}>{message}</p>}
 
-            <div className="text-center">
-                <span className="text-muted">Already have an account?</span> <a href="/login" className="text-primary">Log In</a>
-            </div>
+                <div className="text-center">
+                    <span className="text-muted">Already have an account?</span> <a href="/login" className="text-primary">Log In</a>
+                </div>
         </form>
+
+        {showVerificationModal && (
+            <VerificationModal
+                email={form.email}
+                onSuccess={handleVerificationSuccess}
+                onClose={() => setShowVerificationModal(false)}
+            />
+        )}
+    </>
     );
 };
 
