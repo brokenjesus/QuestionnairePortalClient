@@ -7,6 +7,7 @@ import LogoutPage from './pages/LogoutPage.jsx';
 import PrivateRoute from './components/PrivateRoute.jsx';
 import PasswordChangePage from "./pages/PasswordChangePage.jsx";
 import FieldsPage from "./pages/FieldsPage.jsx";
+import QuestionnairePage from "./pages/QuestionnairePage.jsx";
 import './App.css';
 
 function App() {
@@ -33,6 +34,11 @@ function App() {
                 <Route path="/fields" element={
                     <PrivateRoute>
                         <FieldsPage />
+                    </PrivateRoute>
+                } />
+                <Route path="/questionnaires" element={
+                    <PrivateRoute>
+                        <QuestionnairePage />
                     </PrivateRoute>
                 } />
                 <Route path="/" element={

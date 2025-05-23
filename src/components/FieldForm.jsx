@@ -186,6 +186,7 @@ const FieldForm = ({ onClose, onSubmit, initialData }) => {
                                     <input
                                         type="date"
                                         className="form-control"
+                                        disabled
                                     />
                                 </div>
                             )}

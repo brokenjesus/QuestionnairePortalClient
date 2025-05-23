@@ -8,16 +8,22 @@ const VerificationModal = ({ email, onSuccess, onClose }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log("Verification code submitted:", code); // Добавьте этот лог
+
+        if (!code || code.length !== 6) {
+            setMessage('Please enter a valid 6-digit code');
+            return;
+        }
+
         setIsLoading(true);
         try {
-            const success = await verifyEmail(email, code);
-            if (success) {
-                onSuccess();
-            } else {
-                setMessage('Invalid verification code or code has expired.');
-            }
+            console.log("Calling verifyEmail with:", email, code);
+            await verifyEmail(email, code);
+            console.log("Verification successful, calling onSuccess");
+            onSuccess(code);
         } catch (err) {
-            setMessage('Verification failed: ' + err.message);
+            console.error("Verification error:", err);
+            setMessage('Verification failed: ' + (err.response?.data?.message || err.message));
         } finally {
             setIsLoading(false);
         }
@@ -33,7 +39,8 @@ const VerificationModal = ({ email, onSuccess, onClose }) => {
                     </div>
                     <div className="modal-body">
                         <p>We've sent a 6-digit verification code to {email}. Please enter it below:</p>
-                        <form onSubmit={handleSubmit}>
+                        {/* Remove the form element and use div instead */}
+                        <div>
                             <div className="mb-3">
                                 <input
                                     type="text"
@@ -46,13 +53,14 @@ const VerificationModal = ({ email, onSuccess, onClose }) => {
                                 />
                             </div>
                             <button
-                                type="submit"
+                                type="button" // Change type to button
                                 className="btn btn-primary"
                                 disabled={isLoading}
+                                onClick={handleSubmit} // Use onClick instead of form onSubmit
                             >
                                 {isLoading ? 'Verifying...' : 'Verify Email'}
                             </button>
-                        </form>
+                        </div>
                         {message && (
                             <div className={`mt-3 alert ${message.includes('failed') ? 'alert-danger' : 'alert-warning'}`}>
                                 {message}

@@ -1,7 +1,6 @@
 import React from 'react';
 import PasswordChangeForm from '../components/PasswordChangeForm.jsx';
 import Navbar from "../components/Navbar.jsx";
-import ProfileForm from "../components/ProfileForm.jsx";
 
 const PasswordChangePage = () => {
     return (

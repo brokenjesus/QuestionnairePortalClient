@@ -16,8 +16,9 @@ const FieldsPage = () => {
     useEffect(() => {
         const fetchFields = async () => {
             try {
+                const token = localStorage.getItem('token');
                 setIsLoading(true);
-                const data = await FieldService.getAllFields(currentPage, pageSize);
+                const data = await FieldService.getAllFields(currentPage, pageSize, token);
                 setFields(data);
                 setError(null);
             } catch (err) {

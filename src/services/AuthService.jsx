@@ -34,13 +34,13 @@ export const updateProfile = async (profile, token) => {
     }
 };
 
-export const changePassword = async (passwordData, token) => {
+export const changePassword = async (data, token) => {
     try {
-        const response = await axios.post(
+        const response = await axios.put(
             `${API_URL}/change-password`,
             {
-                currentPassword: passwordData.currentPassword,
-                newPassword: passwordData.newPassword,
+                currentPassword: data.currentPassword,
+                newPassword: data.currentPassword
             },
             {
                 headers: {
@@ -54,6 +54,17 @@ export const changePassword = async (passwordData, token) => {
     }
 };
 
+export const changePasswordSendVerificationCode = async (token) => {
+    const response = await axios.get(
+        `${API_URL}/change-password/send-verification-code`,
+        {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }
+    );
+    return response.data;
+};
 
 export const verifyEmail = async (email, code) => {
     const response = await axios.post(

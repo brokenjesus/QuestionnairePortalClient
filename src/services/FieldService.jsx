@@ -2,23 +2,32 @@ import axios from "axios";
 
 const API_URL = 'http://localhost:8080/api/fields';
 
-const getAllFields = async (page = 0, size = 10) => {
+const getAllFields = async (page = 0, size = 10, token) => {
     try {
-        const response = await axios.get(API_URL+`?page=${page}&size=${size}`);
+        const response = await axios.get(API_URL+`?page=${page}&size=${size}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
         return response.data;
     } catch (error) {
         throw new Error(error.response?.data?.message || 'Failed to fetch fields');
     }
 };
 
-const getActiveFields = async () => {
+const getActiveFields = async (token) => {
     try {
-        const response = await axios.get(API_URL+`/active`);
+        const response = await axios.get(API_URL+`/active`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
         return response.data;
     } catch (error) {
         throw new Error(error.response?.data?.message || 'Failed to fetch active fields');
     }
 }
+
 
 const createField = async (fieldData, token) => {
     try {
@@ -74,6 +83,7 @@ const updateField = async (id, fieldData, token) => {
 // Добавляем в экспорт
 export default {
     getAllFields,
+    getActiveFields,
     createField,
     deleteField,
     updateField

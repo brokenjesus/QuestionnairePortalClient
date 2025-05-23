@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { updateProfile } from '../services/AuthService.jsx';
 import Navbar from '../components/Navbar.jsx';
 import ProfileForm from '../components/ProfileForm.jsx';
-import PasswordChangeForm from "../components/PasswordChangeForm.jsx";
 
 const ProfilePage = () => {
     const [profile, setProfile] = useState({
