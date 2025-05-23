@@ -57,7 +57,7 @@ const LoginForm = () => {
                     <input type="checkbox" className="form-check-input" id="rememberMe" />
                     <label className="form-check-label" htmlFor="rememberMe">Remember me</label>
                 </div>
-                <a href="#" className="text-primary small">Forgot your password?</a>
+                <a href="/change-password" className="text-primary small">Forgot your password?</a>
             </div>
 
             <div className="d-grid mb-3">

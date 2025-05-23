@@ -33,6 +33,15 @@ const getAllQuestionnaires = async (token) => {
     }
 };
 
+const getQuestionnaireById = async (id) => {
+    try {
+        const response = await axios.get(`${API_URL}/${id}`);
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response?.data?.message || 'Failed to fetch questionnaire');
+    }
+};
+
 const updateQuestionnaire = async (id, questionnaireData, token) => {
     try {
         const response = await axios.put(
@@ -69,6 +78,7 @@ const deleteQuestionnaire = async (id, token) => {
 export default {
     createQuestionnaire,
     getAllQuestionnaires,
+    getQuestionnaireById,
     updateQuestionnaire,
     deleteQuestionnaire
 };

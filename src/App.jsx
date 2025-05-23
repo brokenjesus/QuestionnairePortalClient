@@ -7,7 +7,10 @@ import LogoutPage from './pages/LogoutPage.jsx';
 import PrivateRoute from './components/PrivateRoute.jsx';
 import PasswordChangePage from "./pages/PasswordChangePage.jsx";
 import FieldsPage from "./pages/FieldsPage.jsx";
-import QuestionnairePage from "./pages/QuestionnairePage.jsx";
+import AllQuestionnairesPage from "./pages/AllQuestionnairesPage.jsx";
+import QuestionnairePage from './pages/QuestionnairePage.jsx';
+import ResponsesPage from './pages/ResponsesPage.jsx';
+
 import './App.css';
 
 function App() {
@@ -27,9 +30,7 @@ function App() {
                     </PrivateRoute>
                 } />
                 <Route path="/change-password" element={
-                    <PrivateRoute>
-                        <PasswordChangePage />
-                    </PrivateRoute>
+                    <PasswordChangePage />
                 } />
                 <Route path="/fields" element={
                     <PrivateRoute>
@@ -38,8 +39,16 @@ function App() {
                 } />
                 <Route path="/questionnaires" element={
                     <PrivateRoute>
-                        <QuestionnairePage />
+                        <AllQuestionnairesPage />
                     </PrivateRoute>
+                } />
+                <Route path="/responses" element={
+                    <PrivateRoute>
+                        <ResponsesPage />
+                    </PrivateRoute>
+                } />
+                <Route path="/questionnaires/:id" element={
+                    <QuestionnairePage />
                 } />
                 <Route path="/" element={
                     <PrivateRoute>
