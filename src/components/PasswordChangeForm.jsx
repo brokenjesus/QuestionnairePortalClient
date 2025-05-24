@@ -23,12 +23,10 @@ const PasswordChangeForm = () => {
 
         setIsLoading(true);
         try {
-            const token = localStorage.getItem('token');
-            // Получаем email из токена или другого места
-            const userEmail = localStorage.getItem('email') || '';
+            const userEmail = sessionStorage.getItem('email') || localStorage.getItem('email');
             setEmail(userEmail);
 
-            await changePasswordSendVerificationCode(token);
+            await changePasswordSendVerificationCode();
             setShowVerificationModal(true);
         } catch (err) {
             setMessage({
@@ -42,7 +40,6 @@ const PasswordChangeForm = () => {
 
     const handleVerificationComplete = async (verificationCode) => {
         try {
-            const token = localStorage.getItem('token');
             console.log("Sending change password request with:", {
                 currentPassword,
                 newPassword,
@@ -53,7 +50,7 @@ const PasswordChangeForm = () => {
                 currentPassword,
                 newPassword,
                 verificationCode
-            }, token);
+            });
 
             console.log("Change password response:", response);
 

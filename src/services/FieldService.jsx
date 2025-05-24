@@ -1,8 +1,9 @@
 import axios from "axios";
 
 const API_URL = 'http://localhost:8080/api/fields';
+const token = sessionStorage.getItem('token') || localStorage.getItem('token');
 
-const getAllFields = async (page = 0, size = 10, token) => {
+const getAllFields = async (page = 0, size = 10) => {
     try {
         const response = await axios.get(API_URL+`?page=${page}&size=${size}`, {
             headers: {
@@ -15,7 +16,7 @@ const getAllFields = async (page = 0, size = 10, token) => {
     }
 };
 
-const getActiveFields = async (token) => {
+const getActiveFields = async () => {
     try {
         const response = await axios.get(API_URL+`/active`, {
             headers: {
@@ -29,7 +30,7 @@ const getActiveFields = async (token) => {
 }
 
 
-const createField = async (fieldData, token) => {
+const createField = async (fieldData) => {
     try {
         const response = await axios.post(
             API_URL,
@@ -47,7 +48,7 @@ const createField = async (fieldData, token) => {
     }
 };
 
-const deleteField = async (id, token) => {
+const deleteField = async (id) => {
     try {
         await axios.delete(
             `${API_URL}/${id}`,
@@ -62,7 +63,7 @@ const deleteField = async (id, token) => {
     }
 };
 
-const updateField = async (id, fieldData, token) => {
+const updateField = async (id, fieldData) => {
     try {
         const response = await axios.put(
             `${API_URL}/${id}`,

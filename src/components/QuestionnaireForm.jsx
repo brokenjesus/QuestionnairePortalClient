@@ -13,8 +13,7 @@ const QuestionnaireForm = ({ onClose, onSubmit, initialData }) => {
     useEffect(() => {
         const fetchActiveFields = async () => {
             try {
-                const token = localStorage.getItem('token');
-                const data = await FieldService.getActiveFields(token);
+                const data = await FieldService.getActiveFields();
                 setFields(data);
                 setIsLoading(false);
             } catch (err) {
@@ -31,6 +30,7 @@ const QuestionnaireForm = ({ onClose, onSubmit, initialData }) => {
         if (initialData) {
             setName(initialData.name);
             setDescription(initialData.description);
+            // Keep field order as in initialData.fields
             setSelectedFields(initialData.fields?.map(f => f.id) || []);
         } else {
             setName('');
@@ -45,6 +45,18 @@ const QuestionnaireForm = ({ onClose, onSubmit, initialData }) => {
                 ? prev.filter(id => id !== fieldId)
                 : [...prev, fieldId]
         );
+    };
+
+    const moveField = (index, direction) => {
+        setSelectedFields(prev => {
+            const newFields = [...prev];
+            const newIndex = index + direction;
+
+            if (newIndex < 0 || newIndex >= newFields.length) return prev;
+
+            [newFields[index], newFields[newIndex]] = [newFields[newIndex], newFields[index]];
+            return newFields;
+        });
     };
 
     const handleSubmit = (e) => {
@@ -131,19 +143,17 @@ const QuestionnaireForm = ({ onClose, onSubmit, initialData }) => {
                                 />
                             </div>
 
-                            <div className="mb-3">
-                                <label className="form-label">
-                                    Fields
-                                </label>
-                                <div className="border p-3 rounded" style={{ maxHeight: '300px', overflowY: 'auto' }}>
-                                    {fields.length > 0 ? (
-                                        fields.map(field => (
+                            <div className="row">
+                                <div className="col-md-6">
+                                    <h6>Available Fields</h6>
+                                    <div className="border p-2 rounded" style={{ maxHeight: '250px', overflowY: 'auto' }}>
+                                        {fields.filter(f => !selectedFields.includes(f.id)).map(field => (
                                             <div key={field.id} className="form-check mb-2">
                                                 <input
                                                     className="form-check-input"
                                                     type="checkbox"
                                                     id={`field-${field.id}`}
-                                                    checked={selectedFields.includes(field.id)}
+                                                    checked={false}
                                                     onChange={() => handleFieldToggle(field.id)}
                                                 />
                                                 <label className="form-check-label" htmlFor={`field-${field.id}`}>
@@ -151,12 +161,53 @@ const QuestionnaireForm = ({ onClose, onSubmit, initialData }) => {
                                                     {field.required && <span className="text-danger ms-1">*</span>}
                                                 </label>
                                             </div>
-                                        ))
-                                    ) : (
-                                        <div className="text-muted">
-                                            No active fields available. Please create fields first.
-                                        </div>
-                                    )}
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="col-md-6">
+                                    <h6>Selected Fields (sortable)</h6>
+                                    <div className="border p-2 rounded" style={{ maxHeight: '250px', overflowY: 'auto' }}>
+                                        {selectedFields.map((id, index) => {
+                                            const field = fields.find(f => f.id === id);
+                                            if (!field) return null;
+                                            return (
+                                                <div key={field.id} className="d-flex align-items-center justify-content-between mb-2">
+                                                    <div className="form-check flex-grow-1">
+                                                        <input
+                                                            className="form-check-input"
+                                                            type="checkbox"
+                                                            id={`field-${field.id}`}
+                                                            checked={true}
+                                                            onChange={() => handleFieldToggle(field.id)}
+                                                        />
+                                                        <label className="form-check-label" htmlFor={`field-${field.id}`}>
+                                                            {field.label} ({field.type.replace(/_/g, ' ')})
+                                                            {field.required && <span className="text-danger ms-1">*</span>}
+                                                        </label>
+                                                    </div>
+                                                    <div className="btn-group ms-2">
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-sm btn-outline-secondary"
+                                                            onClick={() => moveField(index, -1)}
+                                                            disabled={index === 0}
+                                                        >
+                                                            ↑
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-sm btn-outline-secondary"
+                                                            onClick={() => moveField(index, 1)}
+                                                            disabled={index === selectedFields.length - 1}
+                                                        >
+                                                            ↓
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
                                 </div>
                             </div>
 

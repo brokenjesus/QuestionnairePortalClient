@@ -5,11 +5,12 @@ const LogoutPage = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        localStorage.removeItem('token'); // Удалить токен
-        navigate('/login'); // Редирект на страницу входа
+        localStorage.removeItem('token');
+        sessionStorage.removeItem('token');
+        navigate('/login');
     }, [navigate]);
 
-    return null; // Ничего не отображает
+    return null;
 };
 
 export default LogoutPage;

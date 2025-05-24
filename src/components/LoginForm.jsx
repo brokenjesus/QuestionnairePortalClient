@@ -5,6 +5,7 @@ import { login } from '../services/AuthService.jsx';
 const LoginForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [rememberMe, setRememberMe] = useState(false);
     const [message, setMessage] = useState('');
     const navigate = useNavigate();
 
@@ -12,11 +13,15 @@ const LoginForm = () => {
         e.preventDefault();
         try {
             const data = await login(email, password);
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('email', data.email);
-            localStorage.setItem('firstName', data.firstName);
-            localStorage.setItem('lastName', data.lastName);
-            localStorage.setItem('phoneNumber', data.phoneNumber);
+
+            const storage = rememberMe ? localStorage : sessionStorage;
+
+            storage.setItem('token', data.token);
+            storage.setItem('email', data.email);
+            storage.setItem('firstName', data.firstName);
+            storage.setItem('lastName', data.lastName);
+            storage.setItem('phoneNumber', data.phoneNumber);
+
             navigate('/');
         } catch (err) {
             setMessage('Login failed: ' + err.message + '\nCheck credentials.');
@@ -54,7 +59,13 @@ const LoginForm = () => {
 
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <div className="form-check">
-                    <input type="checkbox" className="form-check-input" id="rememberMe" />
+                    <input
+                        type="checkbox"
+                        className="form-check-input"
+                        id="rememberMe"
+                        checked={rememberMe}
+                        onChange={() => setRememberMe(!rememberMe)}
+                    />
                     <label className="form-check-label" htmlFor="rememberMe">Remember me</label>
                 </div>
                 <a href="/change-password" className="text-primary small">Forgot your password?</a>

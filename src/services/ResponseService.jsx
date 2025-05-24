@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const API_URL = 'http://localhost:8080/api/';
+const token = sessionStorage.getItem('token') || localStorage.getItem('token');
 
 const submitResponse = async (responseData) => {
     try {
@@ -14,7 +15,7 @@ const submitResponse = async (responseData) => {
     }
 };
 
-const getResponseById = async (id, token) => {
+const getResponseById = async (id) => {
     try {
         const response = await axios.get(`${API_URL}responses/${id}`, {
             headers: {

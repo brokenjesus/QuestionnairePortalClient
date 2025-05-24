@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const API_URL = 'http://localhost:8080/api/auth';
+const token = sessionStorage.getItem('token') || localStorage.getItem('token');
 
 export const login = async (email, password) => {
     const response = await axios.post(`${API_URL}/login`, { email, password });
@@ -12,7 +13,7 @@ export const signup = async (user) => {
     return response.data;
 };
 
-export const updateProfile = async (profile, token) => {
+export const updateProfile = async (profile) => {
     try {
         const response = await axios.put(
             `${API_URL}/profile`,
@@ -34,7 +35,7 @@ export const updateProfile = async (profile, token) => {
     }
 };
 
-export const changePassword = async (data, token) => {
+export const changePassword = async (data) => {
     try {
         const response = await axios.put(
             `${API_URL}/change-password`,
@@ -54,7 +55,7 @@ export const changePassword = async (data, token) => {
     }
 };
 
-export const changePasswordSendVerificationCode = async (token) => {
+export const changePasswordSendVerificationCode = async () => {
     const response = await axios.get(
         `${API_URL}/change-password/send-verification-code`,
         {

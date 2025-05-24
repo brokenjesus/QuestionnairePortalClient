@@ -4,7 +4,7 @@ import React from "react";
 
 
 const HomePage = () => {
-    const email = localStorage.getItem('email')
+    const email = sessionStorage.getItem('email') || localStorage.getItem('email') ;
     return (
         <>
             <Navbar />

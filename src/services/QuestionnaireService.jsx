@@ -1,8 +1,9 @@
 import axios from "axios";
 
 const API_URL = 'http://localhost:8080/api/questionnaires';
+const token = sessionStorage.getItem('token') || localStorage.getItem('token');
 
-const createQuestionnaire = async (questionnaireData, token) => {
+const createQuestionnaire = async (questionnaireData) => {
     try {
         const response = await axios.post(
             API_URL,
@@ -20,9 +21,22 @@ const createQuestionnaire = async (questionnaireData, token) => {
     }
 };
 
-const getAllQuestionnaires = async (token) => {
+const getAllQuestionnaires = async () => {
     try {
         const response = await axios.get(API_URL, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response?.data?.message || 'Failed to fetch questionnaires');
+    }
+};
+
+const getAllQuestionnairesPageable = async (page, size) => {
+    try {
+        const response = await axios.get(API_URL+`?page=${page}&size=${size}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -42,7 +56,7 @@ const getQuestionnaireById = async (id) => {
     }
 };
 
-const updateQuestionnaire = async (id, questionnaireData, token) => {
+const updateQuestionnaire = async (id, questionnaireData) => {
     try {
         const response = await axios.put(
             `${API_URL}/${id}`,
@@ -60,7 +74,7 @@ const updateQuestionnaire = async (id, questionnaireData, token) => {
     }
 };
 
-const deleteQuestionnaire = async (id, token) => {
+const deleteQuestionnaire = async (id) => {
     try {
         await axios.delete(
             `${API_URL}/${id}`,
@@ -78,6 +92,7 @@ const deleteQuestionnaire = async (id, token) => {
 export default {
     createQuestionnaire,
     getAllQuestionnaires,
+    getAllQuestionnairesPageable,
     getQuestionnaireById,
     updateQuestionnaire,
     deleteQuestionnaire

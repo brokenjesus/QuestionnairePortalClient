@@ -9,7 +9,7 @@ const handleLogout = () => {
 const Navbar = () => {
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom px-4 fixed-top">
-            <a className="navbar-brand fw-bold" href="#">
+            <a className="navbar-brand fw-bold" href="/">
                 <span className="text-dark">LOGO</span><span className="text-primary">TYPE</span>
             </a>
             <div className="collapse navbar-collapse">
@@ -27,7 +27,7 @@ const Navbar = () => {
 
                 <Dropdown>
                     <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic">
-                        {localStorage.getItem('firstName')}
+                        {sessionStorage.getItem('firstName') || localStorage.getItem('firstName')}
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu align="end">

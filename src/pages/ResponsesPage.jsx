@@ -18,8 +18,7 @@ const ResponsesPage = () => {
         const fetchQuestionnaires = async () => {
             try {
                 setLoading(true);
-                const token = localStorage.getItem('token');
-                const data = await QuestionnaireService.getAllQuestionnaires(token);
+                const data = await QuestionnaireService.getAllQuestionnaires();
                 setQuestionnaires(data);
             } catch (err) {
                 setError(err.message);
@@ -96,7 +95,7 @@ const ResponsesPage = () => {
 
     useEffect(() => {
         if (connected && selectedQuestionnaire && stompClient) {
-            const token = localStorage.getItem('token'); // или откуда у тебя берется токен
+            const token = sessionStorage.getItem('token') || localStorage.getItem('token');
 
             const payload = {
                 questionnaireId: selectedQuestionnaire.id,
@@ -176,7 +175,7 @@ const ResponsesPage = () => {
                                 {tableData.map((row, rowIndex) => (
                                     <tr key={rowIndex}>
                                         {tableFields.map((field, colIndex) => (
-                                            <td key={colIndex}>{row[field] || '—'}</td>
+                                            <td key={colIndex}>{row[field] || 'N/A'}</td>
                                         ))}
                                     </tr>
                                 ))}

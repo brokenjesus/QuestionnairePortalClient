@@ -16,9 +16,8 @@ const FieldsPage = () => {
     useEffect(() => {
         const fetchFields = async () => {
             try {
-                const token = localStorage.getItem('token');
                 setIsLoading(true);
-                const data = await FieldService.getAllFields(currentPage, pageSize, token);
+                const data = await FieldService.getAllFields(currentPage, pageSize);
                 setFields(data);
                 setError(null);
             } catch (err) {
@@ -35,8 +34,7 @@ const FieldsPage = () => {
 
     const handleAddField = async (fieldData) => {
         try {
-            const token = localStorage.getItem('token');
-            const createdField = await FieldService.createField(fieldData, token);
+            const createdField = await FieldService.createField(fieldData);
             setShowModal(false);
             setFields(prev => [...prev, createdField]);
             setTimeout(() => window.location.reload(), 500);
@@ -49,8 +47,7 @@ const FieldsPage = () => {
 
     const handleUpdateField = async (fieldData) => {
         try {
-            const token = localStorage.getItem('token');
-            const updatedField = await FieldService.updateField(editingField.id, fieldData, token);
+            const updatedField = await FieldService.updateField(editingField.id, fieldData);
             setShowModal(false);
             setEditingField(null);
             setFields(prev => prev.map(f => f.id === updatedField.id ? updatedField : f));
@@ -66,8 +63,7 @@ const FieldsPage = () => {
         if (!window.confirm('Are you sure you want to delete this field?')) return;
 
         try {
-            const token = localStorage.getItem('token');
-            await FieldService.deleteField(id, token);
+            await FieldService.deleteField(id);
             setFields(prev => prev.filter(field => field.id !== id));
         } catch (error) {
             console.error("Ошибка при удалении поля:", error);

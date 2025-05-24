@@ -9,6 +9,7 @@ const QuestionnairePage = () => {
     const navigate = useNavigate();
     const [questionnaire, setQuestionnaire] = useState(null);
     const [answers, setAnswers] = useState({});
+    const [initialAnswers, setInitialAnswers] = useState({});
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -18,19 +19,16 @@ const QuestionnairePage = () => {
         const fetchQuestionnaire = async () => {
             try {
                 const data = await QuestionnaireService.getQuestionnaireById(id);
+                console.log(data)
                 setQuestionnaire(data);
 
-                // Initialize answers object with field ids
-                const initialAnswers = {};
+                const defaults = {};
                 data.fields.forEach(field => {
-                    if (field.type === 'CHECKBOX') {
-                        initialAnswers[field.id] = [];
-                    } else {
-                        initialAnswers[field.id] = '';
-                    }
+                    defaults[field.id] = field.type === 'CHECKBOX' ? [] : '';
                 });
-                setAnswers(initialAnswers);
 
+                setAnswers(defaults);
+                setInitialAnswers(defaults);
                 setError(null);
             } catch (err) {
                 console.error("Error loading questionnaire:", err);
@@ -62,20 +60,21 @@ const QuestionnairePage = () => {
         });
     };
 
+    const handleClearForm = () => {
+        setAnswers(initialAnswers);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
         setError(null);
 
         try {
-            // Validate required fields
             const missingFields = questionnaire.fields
                 .filter(field => field.isRequired)
                 .filter(field => {
-                    if (field.type === 'CHECKBOX') {
-                        return answers[field.id]?.length === 0;
-                    }
-                    return !answers[field.id];
+                    const answer = answers[field.id];
+                    return field.type === 'CHECKBOX' ? answer?.length === 0 : !answer;
                 });
 
             if (missingFields.length > 0) {
@@ -117,7 +116,6 @@ const QuestionnairePage = () => {
                         required={field.isRequired}
                     />
                 );
-
             case 'MULTILINE_TEXT':
                 return (
                     <textarea
@@ -128,7 +126,6 @@ const QuestionnairePage = () => {
                         required={field.isRequired}
                     />
                 );
-
             case 'RADIO_BUTTON':
                 return (
                     <div className="btn-group-vertical" role="group">
@@ -151,7 +148,6 @@ const QuestionnairePage = () => {
                         ))}
                     </div>
                 );
-
             case 'CHECKBOX':
                 return (
                     <div className="btn-group-vertical" role="group">
@@ -163,11 +159,7 @@ const QuestionnairePage = () => {
                                     id={`checkbox-${field.id}-${idx}`}
                                     value={option}
                                     checked={answers[field.id]?.includes(option) || false}
-                                    onChange={(e) => handleCheckboxChange(
-                                        field.id,
-                                        option,
-                                        e.target.checked
-                                    )}
+                                    onChange={(e) => handleCheckboxChange(field.id, option, e.target.checked)}
                                 />
                                 <label className="form-check-label" htmlFor={`checkbox-${field.id}-${idx}`}>
                                     {option}
@@ -176,7 +168,6 @@ const QuestionnairePage = () => {
                         ))}
                     </div>
                 );
-
             case 'COMBOBOX':
                 return (
                     <select
@@ -191,7 +182,6 @@ const QuestionnairePage = () => {
                         ))}
                     </select>
                 );
-
             case 'DATE':
                 return (
                     <input
@@ -202,7 +192,6 @@ const QuestionnairePage = () => {
                         required={field.isRequired}
                     />
                 );
-
             default:
                 return <p>Unsupported field type</p>;
         }
@@ -212,11 +201,9 @@ const QuestionnairePage = () => {
         return (
             <>
                 <Navbar />
-                <div className="container mt-4">
-                    <div className="d-flex justify-content-center">
-                        <div className="spinner-border" role="status">
-                            <span className="visually-hidden">Loading...</span>
-                        </div>
+                <div className="container mt-4 text-center">
+                    <div className="spinner-border" role="status">
+                        <span className="visually-hidden">Loading...</span>
                     </div>
                 </div>
             </>
@@ -276,7 +263,7 @@ const QuestionnairePage = () => {
 
                         <form onSubmit={handleSubmit}>
                             {questionnaire.fields.map((field) => (
-                                <div key={field.id} className="mb-4 text-start">
+                                <div key={field.id} className="mb-4 text-start d-flex flex-column">
                                     <label className="form-label">
                                         {field.label}
                                         {field.required && <span className="text-danger ms-1">*</span>}
@@ -285,7 +272,15 @@ const QuestionnairePage = () => {
                                 </div>
                             ))}
 
-                            <div className="d-flex justify-content-end mt-4">
+                            <div className="d-flex justify-content-between mt-4">
+                                <button
+                                    type="button"
+                                    className="btn btn-outline-secondary"
+                                    onClick={handleClearForm}
+                                >
+                                    Clear⌫
+                                </button>
+
                                 <button
                                     type="submit"
                                     className="btn btn-primary"

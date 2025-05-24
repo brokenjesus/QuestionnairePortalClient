@@ -15,17 +15,18 @@ const ProfilePage = () => {
     const [success, setSuccess] = useState('');
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
+        const token = sessionStorage.getItem('token') || localStorage.getItem('token');
+
         if (!token) {
             window.location.href = '/login';
             return;
         }
 
         setProfile({
-            firstName: localStorage.getItem('firstName') || '',
-            lastName: localStorage.getItem('lastName') || '',
-            email: localStorage.getItem('email') || '',
-            phoneNumber: localStorage.getItem('phoneNumber') || ''
+            firstName: sessionStorage.getItem('firstName') || localStorage.getItem('firstName') || '',
+            lastName: sessionStorage.getItem('lastName') || localStorage.getItem('lastName') || '',
+            email: sessionStorage.getItem('email') || localStorage.getItem('email') || '',
+            phoneNumber:sessionStorage.getItem('phoneNumber') ||  localStorage.getItem('phoneNumber') || ''
         });
     }, []);
 
@@ -41,10 +42,7 @@ const ProfilePage = () => {
         setSuccess('');
 
         try {
-            const token = localStorage.getItem('token');
-            if (!token) throw new Error('No authentication token found');
-
-            await updateProfile(profile, token);
+            await updateProfile(profile);
 
             localStorage.setItem('firstName', profile.firstName);
             localStorage.setItem('lastName', profile.lastName);
