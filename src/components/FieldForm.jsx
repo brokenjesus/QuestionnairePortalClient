@@ -18,7 +18,6 @@ const FieldForm = ({ onClose, onSubmit, initialData }) => {
     const [options, setOptions] = useState([]);
     const [error, setError] = useState('');
 
-    // Инициализация формы данными для редактирования
     useEffect(() => {
         if (initialData) {
             setLabel(initialData.label);
@@ -27,7 +26,6 @@ const FieldForm = ({ onClose, onSubmit, initialData }) => {
             setIsActive(initialData.active);
             setOptions(initialData.options || []);
         } else {
-            // Сброс формы для создания нового поля
             setLabel('');
             setType('');
             setRequired(false);
@@ -56,7 +54,6 @@ const FieldForm = ({ onClose, onSubmit, initialData }) => {
         e.preventDefault();
         setError('');
 
-        // Валидация
         if (!label.trim()) {
             setError('Label is required');
             return;
@@ -130,7 +127,7 @@ const FieldForm = ({ onClose, onSubmit, initialData }) => {
                                     value={type}
                                     onChange={(e) => setType(e.target.value)}
                                     required
-                                    disabled={!!initialData} // Запрещаем менять тип при редактировании
+                                    disabled={!!initialData}
                                 >
                                     <option value="">Select field type</option>
                                     {FIELD_TYPES.map((t) => (

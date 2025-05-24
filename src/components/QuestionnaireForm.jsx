@@ -30,7 +30,6 @@ const QuestionnaireForm = ({ onClose, onSubmit, initialData }) => {
         if (initialData) {
             setName(initialData.name);
             setDescription(initialData.description);
-            // Keep field order as in initialData.fields
             setSelectedFields(initialData.fields?.map(f => f.id) || []);
         } else {
             setName('');

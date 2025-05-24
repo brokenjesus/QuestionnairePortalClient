@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar.jsx';
+import Pagination from '../components/Pagination';
 import FieldForm from '../components/FieldForm.jsx';
 import FieldService from '../services/FieldService.jsx';
 
@@ -10,18 +11,23 @@ const FieldsPage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const [currentPage, setCurrentPage] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [totalItems, setTotalItems] = useState(0);
     const pageSize = 10;
 
     useEffect(() => {
         const fetchFields = async () => {
             try {
                 setIsLoading(true);
-                const data = await FieldService.getAllFields(currentPage, pageSize);
+                const response = await FieldService.getAllFields(currentPage - 1, pageSize);
+                const data = response.content ?? response;
                 setFields(data);
+                setTotalPages(response.totalPages ?? 1);
+                setTotalItems(response.totalElements ?? data.length ?? 0);
                 setError(null);
             } catch (err) {
-                console.error("Ошибка при загрузке полей:", err);
+                console.error('Ошибка при загрузке полей:', err);
                 setError('Failed to load fields');
             } finally {
                 setIsLoading(false);
@@ -31,42 +37,47 @@ const FieldsPage = () => {
         fetchFields();
     }, [currentPage]);
 
+    const handlePageChange = (newPage) => {
+        if (newPage >= 1 && newPage <= totalPages) {
+            setCurrentPage(newPage);
+        }
+    };
 
     const handleAddField = async (fieldData) => {
         try {
             const createdField = await FieldService.createField(fieldData);
             setShowModal(false);
-            setFields(prev => [...prev, createdField]);
+            setFields((prev) => [...prev, createdField]);
             setTimeout(() => window.location.reload(), 500);
         } catch (error) {
-            console.error("Ошибка при создании поля:", error);
+            console.error('Ошибка при создании поля:', error);
             setError('Failed to create field');
         }
     };
-
 
     const handleUpdateField = async (fieldData) => {
         try {
             const updatedField = await FieldService.updateField(editingField.id, fieldData);
             setShowModal(false);
             setEditingField(null);
-            setFields(prev => prev.map(f => f.id === updatedField.id ? updatedField : f));
+            setFields((prev) => prev.map((f) => (f.id === updatedField.id ? updatedField : f)));
             setTimeout(() => window.location.reload(), 500);
         } catch (error) {
-            console.error("Ошибка при обновлении поля:", error);
+            console.error('Ошибка при обновлении поля:', error);
             setError('Failed to update field');
         }
     };
-
 
     const handleDeleteField = async (id) => {
         if (!window.confirm('Are you sure you want to delete this field?')) return;
 
         try {
             await FieldService.deleteField(id);
-            setFields(prev => prev.filter(field => field.id !== id));
+            setFields((prev) => prev.filter((field) => field.id !== id));
+            setTotalItems((prev) => prev - 1);
+            setTimeout(() => window.location.reload(), 500);
         } catch (error) {
-            console.error("Ошибка при удалении поля:", error);
+            console.error('Ошибка при удалении поля:', error);
             setError('Failed to delete field');
         }
     };
@@ -101,8 +112,8 @@ const FieldsPage = () => {
             <>
                 <Navbar />
                 <div className="container mt-4">
-                    <div className="alert alert-danger">
-                        {error}
+                    <div className="alert alert-danger d-flex align-items-center justify-content-between">
+                        <div>{error}</div>
                         <button
                             className="btn btn-sm btn-outline-danger ms-2"
                             onClick={() => window.location.reload()}
@@ -150,8 +161,8 @@ const FieldsPage = () => {
                                 <tr key={field.id}>
                                     <td>{field.label}</td>
                                     <td>{field.type.replace(/_/g, ' ')}</td>
-                                    <td>{field.required ? "Yes" : "No"}</td>
-                                    <td>{field.active ? "Yes" : "No"}</td>
+                                    <td>{field.required ? 'Yes' : 'No'}</td>
+                                    <td>{field.active ? 'Yes' : 'No'}</td>
                                     <td>
                                         <button
                                             className="btn btn-sm btn-outline-secondary"
@@ -188,29 +199,13 @@ const FieldsPage = () => {
                         initialData={editingField}
                     />
                 )}
-                <nav aria-label="Page navigation">
-                    <ul className="pagination justify-content-center mt-3">
-                        <li className={`page-item ${currentPage === 0 ? 'disabled' : ''}`}>
-                            <button className="page-link" onClick={() => setCurrentPage(prev => Math.max(prev - 1, 0))}>
-                                ←
-                            </button>
-                        </li>
 
-                        <li className="page-item active">
-            <span className="page-link">
-                {currentPage + 1}
-            </span>
-                        </li>
-
-                        <li className={`page-item ${fields.length < pageSize ? 'disabled' : ''}`}>
-                            <button className="page-link" onClick={() => setCurrentPage(prev => prev + 1)}>
-                                →
-                            </button>
-                        </li>
-                    </ul>
-                </nav>
-
-
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    totalItems={totalItems}
+                    onPageChange={handlePageChange}
+                />
             </div>
         </>
     );

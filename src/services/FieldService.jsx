@@ -81,7 +81,6 @@ const updateField = async (id, fieldData) => {
     }
 };
 
-// Добавляем в экспорт
 export default {
     getAllFields,
     getActiveFields,

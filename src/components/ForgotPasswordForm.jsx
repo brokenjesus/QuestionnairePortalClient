@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { changePassword, changePasswordSendVerificationCode } from '../services/AuthService.jsx';
+import { forgotPasswordSendVerificationCode, forgotPassword } from '../services/AuthService.jsx';
 import VerificationModal from './VerificationModal.jsx';
 
-const PasswordChangeForm = () => {
-    const [currentPassword, setCurrentPassword] = useState('');
+const ForgotPasswordForm = () => {
+    const [email, setEmail] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [message, setMessage] = useState({ text: '', type: '' });
     const [showVerificationModal, setShowVerificationModal] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [email, setEmail] = useState('');
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -23,10 +22,8 @@ const PasswordChangeForm = () => {
 
         setIsLoading(true);
         try {
-            const userEmail = sessionStorage.getItem('email') || localStorage.getItem('email');
-            setEmail(userEmail);
-
-            await changePasswordSendVerificationCode();
+            console.log(email);
+            await forgotPasswordSendVerificationCode(email);
             setShowVerificationModal(true);
         } catch (err) {
             setMessage({
@@ -38,27 +35,25 @@ const PasswordChangeForm = () => {
         }
     };
 
-    const handleVerificationComplete = async (verificationCode) => {
+    const handleVerificationComplete = async () => {
         try {
-
-            const response = await changePassword({
-                currentPassword,
-                newPassword,
-                verificationCode
+            const response = await forgotPassword({
+                email,
+                newPassword
             });
 
-            console.log("Change password response:", response);
+            console.log("Forgot password response:", response);
 
             setMessage({
-                text: 'Password changed successfully!',
+                text: 'Password reset successfully!',
                 type: 'success'
             });
             setShowVerificationModal(false);
-            setTimeout(() => navigate('/profile'), 2000);
+            setTimeout(() => navigate('/login'), 2000);
         } catch (err) {
-            console.error("Password change error:", err);
+            console.error("Password reset error:", err);
             setMessage({
-                text: 'Password change failed: ' + (err.response?.data?.message || err.message),
+                text: 'Password reset failed: ' + (err.response?.data?.message || err.message),
                 type: 'danger'
             });
         }
@@ -67,16 +62,16 @@ const PasswordChangeForm = () => {
     return (
         <form onSubmit={handleSubmit}>
             <div className="text-center mb-4">
-                <h4 className="mb-4 text-start pb-2 border-bottom">Password Change</h4>
+                <h4 className="mb-4 text-start pb-2 border-bottom">Password Reset</h4>
             </div>
 
             <div className="mb-3">
                 <input
-                    type="password"
+                    type="email"
                     className="form-control"
-                    placeholder="Current Password"
-                    value={currentPassword}
-                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     required
                 />
             </div>
@@ -109,7 +104,7 @@ const PasswordChangeForm = () => {
                     className="btn btn-primary"
                     disabled={isLoading}
                 >
-                    {isLoading ? 'Sending Code...' : 'Change Password'}
+                    {isLoading ? 'Sending Code...' : 'Reset Password'}
                 </button>
             </div>
 
@@ -130,4 +125,4 @@ const PasswordChangeForm = () => {
     );
 };
 
-export default PasswordChangeForm;
+export default ForgotPasswordForm;

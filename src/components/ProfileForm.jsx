@@ -11,7 +11,6 @@ const ProfileForm = ({
     return (
         <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: '30vh' }}>
             <div className="card p-4 shadow-sm" style={{ width: '500px' }}>
-                {/* Заголовок с нижней границей */}
                 <h4 className="mb-4 text-start pb-2 border-bottom">Edit Profile</h4>
 
                 {error && <div className="alert alert-danger text-start">{error}</div>}

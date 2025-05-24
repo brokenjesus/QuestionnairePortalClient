@@ -19,7 +19,6 @@ const QuestionnairePage = () => {
         const fetchQuestionnaire = async () => {
             try {
                 const data = await QuestionnaireService.getQuestionnaireById(id);
-                console.log(data)
                 setQuestionnaire(data);
 
                 const defaults = {};

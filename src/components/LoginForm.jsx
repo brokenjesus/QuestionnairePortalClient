@@ -68,7 +68,7 @@ const LoginForm = () => {
                     />
                     <label className="form-check-label" htmlFor="rememberMe">Remember me</label>
                 </div>
-                <a href="/change-password" className="text-primary small">Forgot your password?</a>
+                <a href="/forgot-password" className="text-primary small">Forgot your password?</a>
             </div>
 
             <div className="d-grid mb-3">

@@ -55,6 +55,22 @@ export const changePassword = async (data) => {
     }
 };
 
+export const forgotPassword = async (data) => {
+    try {
+        const response =
+            await axios.put(
+            `${API_URL}/forgot-password`,
+            {
+                email: data.email,
+                newPassword: data.newPassword
+            }
+        );
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response?.data?.message || 'Failed to change password');
+    }
+};
+
 export const changePasswordSendVerificationCode = async () => {
     const response = await axios.get(
         `${API_URL}/change-password/send-verification-code`,
@@ -62,6 +78,16 @@ export const changePasswordSendVerificationCode = async () => {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
+        }
+    );
+    return response.data;
+};
+
+export const forgotPasswordSendVerificationCode = async (email) => {
+    const response = await axios.post(
+        `${API_URL}/forgot-password/send-verification-code`,
+        {
+            email: email,
         }
     );
     return response.data;

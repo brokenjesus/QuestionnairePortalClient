@@ -8,7 +8,6 @@ const VerificationModal = ({ email, onSuccess, onClose }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Verification code submitted:", code); // Добавьте этот лог
 
         if (!code || code.length !== 6) {
             setMessage('Please enter a valid 6-digit code');
@@ -17,12 +16,9 @@ const VerificationModal = ({ email, onSuccess, onClose }) => {
 
         setIsLoading(true);
         try {
-            console.log("Calling verifyEmail with:", email, code);
             await verifyEmail(email, code);
-            console.log("Verification successful, calling onSuccess");
             onSuccess(code);
         } catch (err) {
-            console.error("Verification error:", err);
             setMessage('Verification failed: ' + (err.response?.data?.message || err.message));
         } finally {
             setIsLoading(false);
@@ -39,7 +35,6 @@ const VerificationModal = ({ email, onSuccess, onClose }) => {
                     </div>
                     <div className="modal-body">
                         <p>We've sent a 6-digit verification code to {email}. Please enter it below:</p>
-                        {/* Remove the form element and use div instead */}
                         <div>
                             <div className="mb-3">
                                 <input
@@ -53,10 +48,10 @@ const VerificationModal = ({ email, onSuccess, onClose }) => {
                                 />
                             </div>
                             <button
-                                type="button" // Change type to button
+                                type="button"
                                 className="btn btn-primary"
                                 disabled={isLoading}
-                                onClick={handleSubmit} // Use onClick instead of form onSubmit
+                                onClick={handleSubmit}
                             >
                                 {isLoading ? 'Verifying...' : 'Verify Email'}
                             </button>

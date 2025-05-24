@@ -7,6 +7,12 @@ const LogoutPage = () => {
     useEffect(() => {
         localStorage.removeItem('token');
         sessionStorage.removeItem('token');
+        localStorage.removeItem('email');
+        sessionStorage.removeItem('firstName');
+        localStorage.removeItem('firstName');
+        sessionStorage.removeItem('lastName');
+        localStorage.removeItem('phoneNumber');
+        sessionStorage.removeItem('phoneNumber');
         navigate('/login');
     }, [navigate]);
 

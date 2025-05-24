@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar.jsx';
+import Pagination from '../components/Pagination';
 import QuestionnaireService from '../services/QuestionnaireService.jsx';
 import QuestionnaireForm from '../components/QuestionnaireForm.jsx';
 
@@ -9,15 +10,20 @@ const AllQuestionnairesPage = () => {
     const [editingQuestionnaire, setEditingQuestionnaire] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [currentPage, setCurrentPage] = useState(0);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [totalItems, setTotalItems] = useState(0);
     const pageSize = 10;
 
     useEffect(() => {
         const fetchQuestionnaires = async () => {
             try {
                 setIsLoading(true);
-                const data = await QuestionnaireService.getAllQuestionnairesPageable(currentPage, pageSize);
-                setQuestionnaires(data);
+                const response = await QuestionnaireService.getAllQuestionnairesPageable(currentPage - 1, pageSize);
+                setQuestionnaires(response.content || []);
+                setTotalPages(response.totalPages ?? 1);
+                setTotalItems(response.totalElements ?? 0);
                 setError(null);
             } catch (err) {
                 console.error("Error loading questionnaires:", err);
@@ -30,11 +36,18 @@ const AllQuestionnairesPage = () => {
         fetchQuestionnaires();
     }, [currentPage]);
 
+    const handlePageChange = (newPage) => {
+        if (newPage >= 1 && newPage <= totalPages) {
+            setCurrentPage(newPage);
+        }
+    };
+
     const handleCreateQuestionnaire = async (questionnaireData) => {
         try {
-            const created = await QuestionnaireService.createQuestionnaire(questionnaireData);
-            setQuestionnaires(prev => [...prev, created]);
+            await QuestionnaireService.createQuestionnaire(questionnaireData);
             setShowModal(false);
+            setCurrentPage(1);
+            setTimeout(() => window.location.reload(), 500);
         } catch (error) {
             console.error("Error creating questionnaire:", error);
             setError('Failed to create questionnaire');
@@ -52,6 +65,7 @@ const AllQuestionnairesPage = () => {
             );
             setShowModal(false);
             setEditingQuestionnaire(null);
+            setTimeout(() => window.location.reload(), 500);
         } catch (error) {
             console.error("Error updating questionnaire:", error);
             setError('Failed to update questionnaire');
@@ -63,7 +77,8 @@ const AllQuestionnairesPage = () => {
 
         try {
             await QuestionnaireService.deleteQuestionnaire(id);
-            setQuestionnaires(prev => prev.filter(q => q.id !== id));
+            setCurrentPage(1);
+            setTimeout(() => window.location.reload(), 500);
         } catch (error) {
             console.error("Error deleting questionnaire:", error);
             setError('Failed to delete questionnaire');
@@ -135,11 +150,11 @@ const AllQuestionnairesPage = () => {
                     <table className="table table-striped">
                         <thead className="table-light">
                         <tr>
-                            <th>Id</th>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>Fields Count</th>
-                            <th>Actions</th>
+                            <th style={{ width: '10%' }}>Id</th>
+                            <th style={{ width: '15%' }}>Name</th>
+                            <th style={{ width: '40%' }}>Description</th>
+                            <th style={{ width: '20%' }}>Fields Count</th>
+                            <th style={{ width: '15%' }}>Actions</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -151,7 +166,7 @@ const AllQuestionnairesPage = () => {
                                     <td>{questionnaire.description}</td>
                                     <td>{questionnaire.fields?.length || 0}</td>
                                     <td>
-                                        <div className="d-flex gap-2">
+                                        <div className="d-flex gap-2 justify-content-between">
                                             <button
                                                 className="btn btn-sm btn-outline-secondary"
                                                 onClick={() => handleEditClick(questionnaire)}
@@ -170,7 +185,7 @@ const AllQuestionnairesPage = () => {
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="4" className="text-center text-muted">
+                                <td colSpan="5" className="text-center text-muted">
                                     No questionnaires found. Create your first questionnaire.
                                 </td>
                             </tr>
@@ -179,27 +194,12 @@ const AllQuestionnairesPage = () => {
                     </table>
                 </div>
 
-                <nav aria-label="Page navigation">
-                    <ul className="pagination justify-content-center mt-3">
-                        <li className={`page-item ${currentPage === 0 ? 'disabled' : ''}`}>
-                            <button className="page-link" onClick={() => setCurrentPage(prev => Math.max(prev - 1, 0))}>
-                                ←
-                            </button>
-                        </li>
-
-                        <li className="page-item active">
-                            <span className="page-link">
-                                {currentPage + 1}
-                            </span>
-                        </li>
-
-                        <li className={`page-item ${questionnaires.length < pageSize ? 'disabled' : ''}`}>
-                            <button className="page-link" onClick={() => setCurrentPage(prev => prev + 1)}>
-                                →
-                            </button>
-                        </li>
-                    </ul>
-                </nav>
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    totalItems={totalItems}
+                    onPageChange={handlePageChange}
+                />
 
                 {showModal && (
                     <QuestionnaireForm
