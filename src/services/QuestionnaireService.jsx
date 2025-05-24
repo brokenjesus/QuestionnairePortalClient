@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = 'http://localhost:8080/api/questionnaires';
+const API_URL = import.meta.env.VITE_BASE_URL + "/questionnaires";
 const token = sessionStorage.getItem('token') || localStorage.getItem('token');
 
 const createQuestionnaire = async (questionnaireData) => {
@@ -21,9 +21,22 @@ const createQuestionnaire = async (questionnaireData) => {
     }
 };
 
-const getAllQuestionnaires = async () => {
+const getAllMyQuestionnaires = async () => {
     try {
-        const response = await axios.get(API_URL, {
+        const response = await axios.get(API_URL+"/my", {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response?.data?.message || 'Failed to fetch questionnaires');
+    }
+};
+
+const getAllMyQuestionnairesPageable = async (page, size) => {
+    try {
+        const response = await axios.get(API_URL+`/my?page=${page}&size=${size}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -36,11 +49,7 @@ const getAllQuestionnaires = async () => {
 
 const getAllQuestionnairesPageable = async (page, size) => {
     try {
-        const response = await axios.get(API_URL+`?page=${page}&size=${size}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
+        const response = await axios.get(API_URL+`/all?page=${page}&size=${size}`);
         return response.data;
     } catch (error) {
         throw new Error(error.response?.data?.message || 'Failed to fetch questionnaires');
@@ -91,7 +100,8 @@ const deleteQuestionnaire = async (id) => {
 
 export default {
     createQuestionnaire,
-    getAllQuestionnaires,
+    getAllMyQuestionnaires,
+    getAllMyQuestionnairesPageable,
     getAllQuestionnairesPageable,
     getQuestionnaireById,
     updateQuestionnaire,

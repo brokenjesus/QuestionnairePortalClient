@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Client } from '@stomp/stompjs';
 import QuestionnaireService from "../services/QuestionnaireService.jsx";
-import Navbar from "../components/Navbar.jsx";
+import Header from "../components/Header.jsx";
 import Pagination from '../components/Pagination';
 
 const ResponsesPage = () => {
@@ -24,7 +24,7 @@ const ResponsesPage = () => {
         const fetchQuestionnaires = async () => {
             try {
                 setLoading(true);
-                const data = await QuestionnaireService.getAllQuestionnaires();
+                const data = await QuestionnaireService.getAllMyQuestionnaires();
                 setQuestionnaires(data);
             } catch (err) {
                 setError(err.message || 'Failed to load questionnaires');
@@ -127,7 +127,7 @@ const ResponsesPage = () => {
 
     return (
         <>
-            <Navbar />
+            <Header />
             <div className="container mt-4 text-start">
                 <h2>Responses Table</h2>
 

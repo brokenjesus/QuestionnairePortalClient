@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from '../components/Navbar.jsx';
+import { Link } from 'react-router-dom';
+import Header from '../components/Header.jsx';
 import Pagination from '../components/Pagination';
 import QuestionnaireService from '../services/QuestionnaireService.jsx';
-import QuestionnaireForm from '../components/QuestionnaireForm.jsx';
 
 const AllQuestionnairesPage = () => {
     const [questionnaires, setQuestionnaires] = useState([]);
-    const [showModal, setShowModal] = useState(false);
-    const [editingQuestionnaire, setEditingQuestionnaire] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -42,63 +40,10 @@ const AllQuestionnairesPage = () => {
         }
     };
 
-    const handleCreateQuestionnaire = async (questionnaireData) => {
-        try {
-            await QuestionnaireService.createQuestionnaire(questionnaireData);
-            setShowModal(false);
-            setCurrentPage(1);
-            setTimeout(() => window.location.reload(), 500);
-        } catch (error) {
-            console.error("Error creating questionnaire:", error);
-            setError('Failed to create questionnaire');
-        }
-    };
-
-    const handleUpdateQuestionnaire = async (questionnaireData) => {
-        try {
-            const updated = await QuestionnaireService.updateQuestionnaire(
-                editingQuestionnaire.id,
-                questionnaireData,
-            );
-            setQuestionnaires(prev =>
-                prev.map(q => q.id === updated.id ? updated : q)
-            );
-            setShowModal(false);
-            setEditingQuestionnaire(null);
-            setTimeout(() => window.location.reload(), 500);
-        } catch (error) {
-            console.error("Error updating questionnaire:", error);
-            setError('Failed to update questionnaire');
-        }
-    };
-
-    const handleDeleteQuestionnaire = async (id) => {
-        if (!window.confirm('Are you sure you want to delete this questionnaire?')) return;
-
-        try {
-            await QuestionnaireService.deleteQuestionnaire(id);
-            setCurrentPage(1);
-            setTimeout(() => window.location.reload(), 500);
-        } catch (error) {
-            console.error("Error deleting questionnaire:", error);
-            setError('Failed to delete questionnaire');
-        }
-    };
-
-    const handleEditClick = (questionnaire) => {
-        setEditingQuestionnaire(questionnaire);
-        setShowModal(true);
-    };
-
-    const handleCloseModal = () => {
-        setShowModal(false);
-        setEditingQuestionnaire(null);
-    };
-
     if (isLoading) {
         return (
             <>
-                <Navbar />
+                <Header />
                 <div className="container mt-4">
                     <div className="d-flex justify-content-center">
                         <div className="spinner-border" role="status">
@@ -113,7 +58,7 @@ const AllQuestionnairesPage = () => {
     if (error) {
         return (
             <>
-                <Navbar />
+                <Header />
                 <div className="container mt-4">
                     <div className="alert alert-danger">
                         {error}
@@ -131,19 +76,13 @@ const AllQuestionnairesPage = () => {
 
     return (
         <>
-            <Navbar />
+            <Header />
             <div className="container mt-4">
-                <div className="d-flex justify-content-between mb-3">
-                    <h2>Questionnaires</h2>
-                    <button
-                        className="btn btn-primary"
-                        onClick={() => {
-                            setEditingQuestionnaire(null);
-                            setShowModal(true);
-                        }}
-                    >
-                        + Create Questionnaire
-                    </button>
+                <div className="d-flex justify-content-between align-items-center mb-3">
+                    <h2>All Questionnaires</h2>
+                    <Link to="/questionnaires/my" className="btn btn-secondary">
+                        My Questionnaires
+                    </Link>
                 </div>
 
                 <div className="table-responsive">
@@ -151,42 +90,30 @@ const AllQuestionnairesPage = () => {
                         <thead className="table-light">
                         <tr>
                             <th style={{ width: '10%' }}>Id</th>
-                            <th style={{ width: '15%' }}>Name</th>
-                            <th style={{ width: '40%' }}>Description</th>
+                            <th style={{ width: '25%' }}>Name</th>
+                            <th style={{ width: '45%' }}>Description</th>
                             <th style={{ width: '20%' }}>Fields Count</th>
-                            <th style={{ width: '15%' }}>Actions</th>
                         </tr>
                         </thead>
                         <tbody>
                         {questionnaires.length > 0 ? (
-                            questionnaires.map(questionnaire => (
-                                <tr key={questionnaire.id}>
-                                    <td>{questionnaire.id}</td>
-                                    <td>{questionnaire.name}</td>
-                                    <td>{questionnaire.description}</td>
-                                    <td>{questionnaire.fields?.length || 0}</td>
-                                    <td>
-                                        <div className="d-flex gap-2 justify-content-between">
-                                            <button
-                                                className="btn btn-sm btn-outline-secondary"
-                                                onClick={() => handleEditClick(questionnaire)}
-                                            >
-                                                ✎ Edit
-                                            </button>
-                                            <button
-                                                className="btn btn-sm btn-outline-danger"
-                                                onClick={() => handleDeleteQuestionnaire(questionnaire.id)}
-                                            >
-                                                ❌ Delete
-                                            </button>
-                                        </div>
-                                    </td>
+                            questionnaires.map((q) => (
+                                <tr
+                                    key={q.id}
+                                    onClick={() => window.location.href = `/questionnaires/${q.id}`}
+                                    style={{cursor: 'pointer'}}
+                                    className="clickable-row"
+                                >
+                                    <td>{q.id}</td>
+                                    <td>{q.name}</td>
+                                    <td>{q.description}</td>
+                                    <td>{q.fields?.length || 0}</td>
                                 </tr>
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="5" className="text-center text-muted">
-                                    No questionnaires found. Create your first questionnaire.
+                                <td colSpan="4" className="text-center text-muted">
+                                    No questionnaires found.
                                 </td>
                             </tr>
                         )}
@@ -200,14 +127,6 @@ const AllQuestionnairesPage = () => {
                     totalItems={totalItems}
                     onPageChange={handlePageChange}
                 />
-
-                {showModal && (
-                    <QuestionnaireForm
-                        onClose={handleCloseModal}
-                        onSubmit={editingQuestionnaire ? handleUpdateQuestionnaire : handleCreateQuestionnaire}
-                        initialData={editingQuestionnaire}
-                    />
-                )}
             </div>
         </>
     );

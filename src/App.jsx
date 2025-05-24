@@ -8,10 +8,11 @@ import PrivateRoute from './components/PrivateRoute.jsx';
 import PasswordChangePage from "./pages/PasswordChangePage.jsx";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage.jsx";
 import FieldsPage from "./pages/FieldsPage.jsx";
+import AllMyQuestionnairesPage from "./pages/AllMyQuestionnairesPage.jsx";
 import AllQuestionnairesPage from "./pages/AllQuestionnairesPage.jsx";
 import QuestionnairePage from './pages/QuestionnairePage.jsx';
-import ResponsesPage from './pages/ResponsesPage.jsx';
 
+import ResponsesPage from './pages/ResponsesPage.jsx';
 import './App.css';
 
 function App() {
@@ -44,8 +45,11 @@ function App() {
                     </PrivateRoute>
                 } />
                 <Route path="/questionnaires" element={
+                    <AllQuestionnairesPage />
+                } />
+                <Route path="/questionnaires/my" element={
                     <PrivateRoute>
-                        <AllQuestionnairesPage />
+                        <AllMyQuestionnairesPage />
                     </PrivateRoute>
                 } />
                 <Route path="/responses" element={
@@ -57,9 +61,7 @@ function App() {
                     <QuestionnairePage />
                 } />
                 <Route path="/" element={
-                    <PrivateRoute>
-                        <IndexPage />
-                    </PrivateRoute>
+                    <IndexPage />
                 } />
             </Routes>
         </Router>

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = 'http://localhost:8080/api/fields';
+const API_URL = import.meta.env.VITE_BASE_URL + "/fields";
 const token = sessionStorage.getItem('token') || localStorage.getItem('token');
 
 const getAllFields = async (page = 0, size = 10) => {

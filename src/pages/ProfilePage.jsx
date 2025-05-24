@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { updateProfile } from '../services/AuthService.jsx';
-import Navbar from '../components/Navbar.jsx';
+import Header from '../components/Header.jsx';
 import ProfileForm from '../components/ProfileForm.jsx';
 
 const ProfilePage = () => {
@@ -58,7 +58,7 @@ const ProfilePage = () => {
 
     return (
         <>
-            <Navbar />
+            <Header />
             <div className="d-flex justify-content-center align-items-center vw-100 vh-100 bg-light">
                 <ProfileForm
                     profile={profile}

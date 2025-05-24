@@ -127,7 +127,6 @@ const FieldForm = ({ onClose, onSubmit, initialData }) => {
                                     value={type}
                                     onChange={(e) => setType(e.target.value)}
                                     required
-                                    disabled={!!initialData}
                                 >
                                     <option value="">Select field type</option>
                                     {FIELD_TYPES.map((t) => (

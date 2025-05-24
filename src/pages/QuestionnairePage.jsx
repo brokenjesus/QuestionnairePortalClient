@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navbar';
+import Header from '../components/Header.jsx';
 import QuestionnaireService from '../services/QuestionnaireService';
 import ResponseService from '../services/ResponseService';
 
@@ -91,10 +91,6 @@ const QuestionnairePage = () => {
 
             await ResponseService.submitResponse(responseData);
             setSubmitSuccess(true);
-
-            setTimeout(() => {
-                navigate('/questionnaires');
-            }, 3000);
         } catch (err) {
             console.error("Error submitting response:", err);
             setError('Failed to submit response. Please try again.');
@@ -199,7 +195,7 @@ const QuestionnairePage = () => {
     if (isLoading) {
         return (
             <>
-                <Navbar />
+                <Header />
                 <div className="container mt-4 text-center">
                     <div className="spinner-border" role="status">
                         <span className="visually-hidden">Loading...</span>
@@ -212,7 +208,7 @@ const QuestionnairePage = () => {
     if (error) {
         return (
             <>
-                <Navbar />
+                <Header />
                 <div className="container mt-4">
                     <div className="alert alert-danger">
                         {error}
@@ -231,12 +227,11 @@ const QuestionnairePage = () => {
     if (submitSuccess) {
         return (
             <>
-                <Navbar />
+                <Header />
                 <div className="container mt-4">
                     <div className="alert alert-success">
                         <h4 className="alert-heading">Thank you!</h4>
-                        <p>Your response has been submitted successfully.</p>
-                        <p>You will be redirected shortly...</p>
+                        <p>Your response was saved.</p>
                     </div>
                 </div>
             </>
@@ -245,7 +240,7 @@ const QuestionnairePage = () => {
 
     return (
         <>
-            <Navbar />
+            <Header />
             <div className="container mt-4 w-25">
                 <div className="card">
                     <div className="card-header bg-primary text-white">

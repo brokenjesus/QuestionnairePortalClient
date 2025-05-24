@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from '../components/Navbar.jsx';
+import Header from '../components/Header.jsx';
 import Pagination from '../components/Pagination';
 import FieldForm from '../components/FieldForm.jsx';
 import FieldService from '../services/FieldService.jsx';
@@ -95,7 +95,7 @@ const FieldsPage = () => {
     if (isLoading) {
         return (
             <>
-                <Navbar />
+                <Header />
                 <div className="container mt-4">
                     <div className="d-flex justify-content-center">
                         <div className="spinner-border" role="status">
@@ -110,7 +110,7 @@ const FieldsPage = () => {
     if (error) {
         return (
             <>
-                <Navbar />
+                <Header />
                 <div className="container mt-4">
                     <div className="alert alert-danger d-flex align-items-center justify-content-between">
                         <div>{error}</div>
@@ -128,10 +128,10 @@ const FieldsPage = () => {
 
     return (
         <>
-            <Navbar />
+            <Header />
             <div className="container mt-4">
                 <div className="d-flex justify-content-between mb-3">
-                    <h4>Fields</h4>
+                    <h4>Your Fields</h4>
                     <button
                         className="btn btn-primary"
                         onClick={() => {

@@ -1,12 +1,12 @@
 import axios from "axios";
 
-const API_URL = 'http://localhost:8080/api/';
+const API_URL = import.meta.env.VITE_BASE_URL;
 const token = sessionStorage.getItem('token') || localStorage.getItem('token');
 
 const submitResponse = async (responseData) => {
     try {
         const response = await axios.post(
-            API_URL+`questionnaires/${responseData.questionnaireId}/response`,
+            API_URL+`/questionnaires/${responseData.questionnaireId}/response`,
             responseData
         );
         return response.data;
@@ -17,7 +17,7 @@ const submitResponse = async (responseData) => {
 
 const getResponseById = async (id) => {
     try {
-        const response = await axios.get(`${API_URL}responses/${id}`, {
+        const response = await axios.get(`${API_URL}/responses/${id}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

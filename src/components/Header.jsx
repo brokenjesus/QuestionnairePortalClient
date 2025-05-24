@@ -6,7 +6,31 @@ const handleLogout = () => {
     window.location.href = '/login';
 };
 
-const Navbar = () => {
+const Header = () => {
+    const token = sessionStorage.getItem('token') || localStorage.getItem('token');
+    const firstName = sessionStorage.getItem('firstName') || localStorage.getItem('firstName');
+
+    if (!token) {
+        return (
+            <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom px-4 fixed-top">
+                <a className="navbar-brand fw-bold" href="/">
+                    <span className="text-dark">LOGO</span><span className="text-primary">TYPE</span>
+                </a>
+                <div className="collapse navbar-collapse">
+                    <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li className="nav-item">
+                            <a className="nav-link" href="/questionnaires">Questionnaire</a>
+                        </li>
+
+                        <li className="nav-item">
+                            <a className="nav-link" href="/login">Log In</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        );
+    }
+
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom px-4 fixed-top">
             <a className="navbar-brand fw-bold" href="/">
@@ -27,7 +51,7 @@ const Navbar = () => {
 
                 <Dropdown>
                     <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic">
-                        {sessionStorage.getItem('firstName') || localStorage.getItem('firstName')}
+                        {firstName}
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu align="end">
@@ -43,4 +67,4 @@ const Navbar = () => {
     );
 };
 
-export default Navbar;
+export default Header;
