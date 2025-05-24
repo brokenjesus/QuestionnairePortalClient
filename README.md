@@ -1,12 +1,63 @@
-# React + Vite
+# Questionnaire Portal - Frontend (React)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend application for Questionnaire Portal built with React, Vite, and React Router.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **User Authentication** (Login/Registration)
+- **Password Recovery** (Forgot/Reset)
+- **Questionnaire Management**
+- **Response Collection**
+- **Profile Management**
+- **Protected Routes**
+- **Responsive Design**
+- **Real-time Updates** (WebSocket)
+- **Bootstrap UI Components**
 
-## Expanding the ESLint configuration
+## Installation
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/your-repo/questionnaire-portal-frontend.git
+   cd questionnaire-portal-frontend
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
+
+3. **Install required packages**
+   ```bash
+   npm install react-bootstrap bootstrap react-router-dom axios @stomp/stompjs sockjs-client
+   # or
+   yarn add react-bootstrap bootstrap react-router-dom axios @stomp/stompjs sockjs-client
+   ```
+
+4. **Configure environment**
+   - Create `.env` file based on `.env.example`
+   - Set your backend API URL:
+     ```env
+      VITE_BASE_URL=http://localhost:8080/api
+      VITE_WS_URL=ws://localhost:8080/ws-responses
+     ```
+
+5. **Run the application**
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   ```
+
+## Key Dependencies
+
+| Package | Version | Purpose |
+|---------|---------|---------|
+| `react-bootstrap` | ^2.9.0 | Bootstrap components for React |
+| `bootstrap` | ^5.3.1 | CSS framework |
+| `react-router-dom` | ^6.15.0 | Client-side routing |
+| `axios` | ^1.5.0 | HTTP client |
+| `@stomp/stompjs` | ^6.1.6 | STOMP over WebSocket |
+| `sockjs-client` | ^1.6.1 | WebSocket fallback |
