@@ -1,11 +1,6 @@
 import React from 'react';
 import { Dropdown } from 'react-bootstrap';
 
-const handleLogout = () => {
-    ['token', 'email', 'firstName', 'lastName', 'phoneNumber'].forEach(localStorage.removeItem.bind(localStorage));
-    window.location.href = '/login';
-};
-
 const Header = () => {
     const token = sessionStorage.getItem('token') || localStorage.getItem('token');
     const firstName = sessionStorage.getItem('firstName') || localStorage.getItem('firstName');
@@ -57,7 +52,7 @@ const Header = () => {
                     <Dropdown.Menu align="end">
                         <Dropdown.Item href="/profile">Edit Profile</Dropdown.Item>
                         <Dropdown.Item href="/change-password">Change Password</Dropdown.Item>
-                        <Dropdown.Item as="button" className="text-danger" onClick={handleLogout}>
+                        <Dropdown.Item className="text-danger" href="/logout">
                             Log Out
                         </Dropdown.Item>
                     </Dropdown.Menu>

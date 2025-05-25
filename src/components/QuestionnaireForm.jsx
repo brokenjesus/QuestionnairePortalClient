@@ -126,7 +126,11 @@ const QuestionnaireForm = ({ onClose, onSubmit, initialData }) => {
                                     onChange={(e) => setName(e.target.value)}
                                     required
                                     placeholder="Enter questionnaire name"
+                                    maxLength={255}
                                 />
+                                <small className="text-muted">
+                                    {name.length}/255 characters
+                                </small>
                             </div>
 
                             <div className="mb-3">
@@ -139,7 +143,11 @@ const QuestionnaireForm = ({ onClose, onSubmit, initialData }) => {
                                     onChange={(e) => setDescription(e.target.value)}
                                     placeholder="Enter questionnaire description"
                                     rows={3}
+                                    maxLength={255}
                                 />
+                                <small className="text-muted">
+                                    {description.length}/255 characters
+                                </small>
                             </div>
 
                             <div className="row">

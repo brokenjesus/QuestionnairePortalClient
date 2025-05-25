@@ -115,7 +115,11 @@ const FieldForm = ({ onClose, onSubmit, initialData }) => {
                                     onChange={(e) => setLabel(e.target.value)}
                                     required
                                     placeholder="Enter field label"
+                                    maxLength={255}
                                 />
+                                <small className="text-muted">
+                                    {label.length}/255 characters
+                                </small>
                             </div>
 
                             <div className="mb-3">
