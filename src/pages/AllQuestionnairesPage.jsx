@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header.jsx';
-import Pagination from '../components/Pagination';
+import Pagination from '../components/Pagination.jsx';
 import QuestionnaireService from '../services/QuestionnaireService.jsx';
 
 const AllQuestionnairesPage = () => {

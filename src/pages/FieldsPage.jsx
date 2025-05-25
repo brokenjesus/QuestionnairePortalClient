@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../components/Header.jsx';
-import Pagination from '../components/Pagination';
+import Pagination from '../components/Pagination.jsx';
 import FieldForm from '../components/FieldForm.jsx';
 import FieldService from '../services/FieldService.jsx';
 

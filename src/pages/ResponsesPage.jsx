@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Client } from '@stomp/stompjs';
+import React, {useEffect, useState} from 'react';
+import {Client} from '@stomp/stompjs';
 import QuestionnaireService from "../services/QuestionnaireService.jsx";
 import Header from "../components/Header.jsx";
-import Pagination from '../components/Pagination';
+import Pagination from '../components/Pagination.jsx';
+
+const WEBSOCKET_URL = import.meta.env.VITE_WS_URL;
 
 const ResponsesPage = () => {
     const [questionnaires, setQuestionnaires] = useState([]);
@@ -19,6 +21,7 @@ const ResponsesPage = () => {
     const [totalElements, setTotalElements] = useState(0);
     const [pageSize, setPageSize] = useState(10);
     const [content, setContent] = useState([]);
+
 
     useEffect(() => {
         const fetchQuestionnaires = async () => {
@@ -37,7 +40,7 @@ const ResponsesPage = () => {
 
     useEffect(() => {
         const client = new Client({
-            brokerURL: 'ws://localhost:8080/ws-responses',
+            brokerURL: WEBSOCKET_URL,
             debug: str => console.log('STOMP DEBUG:', str),
             reconnectDelay: 5000,
         });

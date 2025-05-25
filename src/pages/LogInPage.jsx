@@ -1,12 +1,12 @@
 import React from 'react';
-import LoginForm from '../components/LoginForm.jsx';
+import LogInForm from '../components/LogInForm.jsx';
 
-const LoginPage = () => (
+const LogInPage = () => (
     <div className="d-flex justify-content-center align-items-center vw-100 vh-100 bg-light">
         <div className="card shadow p-4" style={{ width: '100%', maxWidth: '400px' }}>
-            <LoginForm />
+            <LogInForm />
         </div>
     </div>
 );
 
-export default LoginPage;
+export default LogInPage;

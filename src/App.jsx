@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import LoginPage from './pages/LoginPage.jsx';
+import LogInPage from './pages/LogInPage.jsx';
 import SignUpPage from './pages/SignUpPage.jsx';
 import IndexPage from './pages/IndexPage.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
-import LogoutPage from './pages/LogoutPage.jsx';
+import LogOutPage from './pages/LogOutPage.jsx';
 import PrivateRoute from './components/PrivateRoute.jsx';
 import PasswordChangePage from "./pages/PasswordChangePage.jsx";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage.jsx";
@@ -19,11 +19,11 @@ function App() {
     return (
         <Router>
             <Routes>
-                <Route path="/login" element={<LoginPage />} />
+                <Route path="/login" element={<LogInPage />} />
                 <Route path="/signup" element={<SignUpPage />} />
                 <Route path="/logout" element={
                     <PrivateRoute>
-                        <LogoutPage />
+                        <LogOutPage />
                     </PrivateRoute>
                 } />
                 <Route path="/profile" element={

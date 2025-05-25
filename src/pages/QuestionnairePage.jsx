@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Header from '../components/Header.jsx';
-import QuestionnaireService from '../services/QuestionnaireService';
-import ResponseService from '../services/ResponseService';
+import QuestionnaireService from '../services/QuestionnaireService.jsx';
+import ResponseService from '../services/ResponseService.jsx';
 
 const QuestionnairePage = () => {
     const { id } = useParams();
